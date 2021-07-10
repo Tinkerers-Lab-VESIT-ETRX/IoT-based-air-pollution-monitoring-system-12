@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+ 
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+       
+      </head>
+<style>
+     body{
+    background-color: rgba(0, 255, 149, 0.205);
+    
+ }
+    h2{font-family: "sans-serif", "Arial", monospace;}
+    p{font-family: "sans-serif", "Arial", monospace;}
+    h3{font-family: "Times New Roman", Times, serif;}
+</style>
+<body>
+   
+
+<h2>AIR POLLUTION MONITORING SYSTEM</h2><h3>By-Srujan Pailwar(ETRX/D11B)</h3> 
+<h2>DATA PLOTTING</h2>
+<h2>MQ-135</h2>
+<p>Select the Date.(Test Data available only for the dates 06/29/2021 and 06/30/2021.)</p>
+<input type = "date"  id="demo">  
+<h2>
+    
+</h2>
+<h2>
+</h2>
+<button class="btn btn-success" type="button" onclick=myFunction()>Get Line Plot</button>
+
+<div id="chartContainer"></div>
+<canvas id="chart" width="400" height="400"></canvas>
+
+<script language = "javascript" type = "text/javascript">
+ 
+ 
+function myFunction() {
+    var selectedDate=document.getElementById("demo").value;
+    console.log(selectedDate);
+
+    const Http = new XMLHttpRequest();
+    const url='https://air-pollution-monitoring-9687d-default-rtdb.asia-southeast1.firebasedatabase.app/AQ_Level_in_ppm.json';
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = () => {
+        if (Http.readyState == 4 && Http.status == 200) {
+            console.log(Http.responseText);
+            var resData=JSON.parse(Http.responseText);
+            console.log(resData);
+            var i;
+            var plotData=[];
+
+            for(i=0;i<resData.length;i++) {
+                var y=resData[i]['reading']
+                if(resData[i]['date']==selectedDate){
+                var temp1=resData[i]['date'].split('-');
+                var temp2=resData[i]['time'].split(':');
+                var x=new Date(temp1[0],temp1[1]-1,temp1[2],temp2[0],temp2[1]);
+                console.log(x,y);
+                plotData.push({x:x,y:y});
+                }
+               
+            }
+           
+            //console.log(plotData);
+            if(plotData.length!=0){
+                var chart = new CanvasJS.Chart("chartContainer",
+                {
+                    title:{
+                        text: "Air Quality in ppm"
+                    },
+                    axisX:{
+                        gridColor: "cyan" ,        
+                    },
+                    axisY:{        
+                        gridColor: "cyan"
+                    },
+                    data: [
+                        {
+                            type: "line",
+
+                            dataPoints: plotData
+                        }
+
+                    ]
+                });
+
+                chart.render();
+            }
+            else{
+                document.getElementById("chartContainer").innerHTML="No data available for this date."
+            }
+        }
+    }
+    Http.open("GET", url);
+   
+    Http.send();
+   
+
+}
+
+
+</script>
+<h2>
+
+</h2>
+<button class="btn btn-success" type="button" onclick=myFunction1()>Get Bar Plot</button>
+ <div id="chartContainer1"></div>
+    <canvas id="chart" width="400" height="400"></canvas>
+
+<script language = "javascript" type = "text/javascript">
+ 
+ 
+function myFunction1() {
+    var selectedDate=document.getElementById("demo").value;
+    console.log(selectedDate);
+
+    const Http = new XMLHttpRequest();
+    const url='https://air-pollution-monitoring-9687d-default-rtdb.asia-southeast1.firebasedatabase.app/AQ_Level_in_ppm.json';
+    Http.open("GET", url);
+    Http.send();
+    Http.onreadystatechange = () => {
+        if (Http.readyState == 4 && Http.status == 200) {
+            console.log(Http.responseText);
+            var resData=JSON.parse(Http.responseText);
+            console.log(resData);
+            var i;
+            var plotData=[];
+
+            for(i=0;i<resData.length;i++) {
+                var y=resData[i]['reading']
+                if(resData[i]['date']==selectedDate){
+                var temp1=resData[i]['date'].split('-');
+                var temp2=resData[i]['time'].split(':');
+                var x=new Date(temp1[0],temp1[1]-1,temp1[2],temp2[0],temp2[1]);
+                console.log(x,y);
+                plotData.push({x:x,y:y});
+                }
+               
+            }
+           
+            //console.log(plotData);
+            if(plotData.length!=0){
+                var chart = new CanvasJS.Chart("chartContainer1",
+                {
+                    title:{
+                        text: "Air Quality in ppm"
+                    },
+                    axisX:{
+                        gridColor: "cyan" ,       
+                    },
+                    axisY:{        
+                        gridColor: "cyan"
+                    },
+                    data: [
+                        {
+                            type: "bar",
+
+                            dataPoints: plotData
+                        }
+
+                    ]
+                });
+
+                chart.render();
+            }
+            else{
+                document.getElementById("chartContainer1").innerHTML="No data available for this date."
+            }
+        }
+    }
+    Http.open("GET", url);
+   
+    Http.send();
+    
+   
+
+}
+
+</script>
+
+
+</body>
+</html>
